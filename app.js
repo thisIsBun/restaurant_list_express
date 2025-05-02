@@ -2,6 +2,7 @@ const express = require('express');
 const engine = require('express-handlebars');
 const mongoose = require('mongoose')
 const Restaurant = require('./models/restaurant')
+const bodyParser = require('body-parser')
 const app = express();
 const port = 3000;
 require('dotenv').config()
@@ -9,6 +10,7 @@ require('dotenv').config()
 app.engine('handlebars', engine({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: true }))
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection
@@ -44,6 +46,10 @@ app.get('/search', (req, res) => {
 
 });
 
+app.get('/restaurants/new', (req, res) => {
+  res.render('new')
+})
+
 app.get('/restaurants/:id', (req, res) => {
   const { id } = req.params
   Restaurant.findById(id)
@@ -51,6 +57,12 @@ app.get('/restaurants/:id', (req, res) => {
     .then(data => res.render('show', { restaurant: data }))
     .catch(error => console.log(error))
 });
+
+app.post('/restaurants', (req, res) => {
+  Restaurant.create(req.body)
+    .then(() => res.redirect('/'))
+    .catch(error => console.log(error))
+})
 
 app.listen(port, () => {
   console.log(`Express server is listen now: http://localhost:${port}`);
