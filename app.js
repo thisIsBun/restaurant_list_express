@@ -3,14 +3,17 @@ const engine = require('express-handlebars');
 const mongoose = require('mongoose')
 const Restaurant = require('./models/restaurant')
 const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
+require('dotenv').config()
+
 const app = express();
 const port = 3000;
-require('dotenv').config()
 
 app.engine('handlebars', engine({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(methodOverride('_method'))
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection
@@ -72,7 +75,7 @@ app.get('/restaurants/:id/edit', (req, res) => {
     .catch(error => console.log(error))
 })
 
-app.post('/restaurants/:id/edit', (req, res) => {
+app.put('/restaurants/:id', (req, res) => {
   const { id } = req.params
   const { name, name_en, category, image, location, phone, google_map, rating, description } = req.body
   
@@ -93,7 +96,7 @@ app.post('/restaurants/:id/edit', (req, res) => {
   .catch(error => console.log(error))
 })
 
-app.post('/restaurants/:id/delete', (req, res) => {
+app.delete('/restaurants/:id', (req, res) => {
   const { id } = req.params
   Restaurant.findById(id)
     .then(data => data.remove())
