@@ -1,10 +1,35 @@
 <h1 class='mb-1 restaurant-show-title'>{{restaurant.name}}</h1>
 <div class='container'>
   <div class='row'>
-    <div class="text-end">
+    <div class="d-flex justify-content-end gap-2">
       <a href="/restaurants/{{restaurant._id}}/edit">
         <button type="button" class="btn btn-primary">編輯餐廳</button>
       </a>
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+        刪除餐廳
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="deleteModalLabel">刪除餐廳</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              確認刪除餐廳嗎?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+              <form action="/restaurants/{{restaurant._id}}/delete" class="m-0" method="POST">
+                <button class="btn btn-danger py-1">確認</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class='col-12 col-md-10 mx-auto'>
 

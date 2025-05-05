@@ -52,8 +52,35 @@
                 </span>
 
               </div>
-              <div class="card-footer d-flex flex-row-reverse">
+              <div class="card-footer d-flex justify-content-end align-items-center gap-2">
                 <a href="/restaurants/{{this._id}}/edit" class="text-decoration-none">Edit</a>
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                  Delete
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteModalLabel">刪除餐廳</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        確認刪除餐廳嗎?
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                        <form action="/restaurants/{{this._id}}/delete" class="m-0" method="POST">
+                          <button class="btn btn-danger py-1">確認</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </a>
