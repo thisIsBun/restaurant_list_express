@@ -1,9 +1,9 @@
 const express = require('express');
 const engine = require('express-handlebars');
 const mongoose = require('mongoose')
-const Restaurant = require('./models/restaurant')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
+const routers = require('./routes')
 require('dotenv').config()
 
 const app = express();
@@ -14,6 +14,7 @@ app.set('view engine', 'handlebars');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
+app.use(routers)
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection
@@ -24,84 +25,6 @@ db.on('error', () => {
 
 db.once('open', () => {
   console.log('mongodb connected')
-})
-
-app.get('/', (req, res) => {
-  Restaurant.find()
-    .lean()
-    .then((data) => res.render('index', { restaurantData: data }))
-    .catch(error => console.log(error))
-});
-
-app.get('/search', (req, res) => {
-  const { keyword } = req.query;
-  Restaurant.find()
-    .lean()
-    .then(restaurants => {
-      const results = restaurants.filter((data) => {
-        return (
-          data.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase()) ||
-          data.category.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
-        );
-      });
-      res.render('index', { restaurantData: results, keyword });
-    })
-
-});
-
-app.get('/restaurants/new', (req, res) => {
-  res.render('new')
-})
-
-app.get('/restaurants/:id', (req, res) => {
-  const { id } = req.params
-  Restaurant.findById(id)
-    .lean()
-    .then(data => res.render('show', { restaurant: data }))
-    .catch(error => console.log(error))
-});
-
-app.post('/restaurants', (req, res) => {
-  Restaurant.create(req.body)
-    .then(() => res.redirect('/'))
-    .catch(error => console.log(error))
-})
-
-app.get('/restaurants/:id/edit', (req, res) => {
-  const { id } = req.params
-  Restaurant.findById(id)
-    .lean()
-    .then(data => res.render('edit', { restaurant: data }))
-    .catch(error => console.log(error))
-})
-
-app.put('/restaurants/:id', (req, res) => {
-  const { id } = req.params
-  const { name, name_en, category, image, location, phone, google_map, rating, description } = req.body
-  
-  Restaurant.findById(id)
-  .then(data => {
-    data.name = name
-    data.name_en = name_en
-    data.category = category
-    data.image = image
-    data.location = location
-    data.phone = phone
-    data.google_map = google_map
-    data.rating = rating
-    data.description = description
-    return data.save()
-  })
-  .then(() => res.redirect(`/restaurants/${id}`))
-  .catch(error => console.log(error))
-})
-
-app.delete('/restaurants/:id', (req, res) => {
-  const { id } = req.params
-  Restaurant.findById(id)
-    .then(data => data.remove())
-    .then(() => res.redirect('/'))
-    .catch(error => console.log(error))
 })
 
 app.listen(port, () => {
