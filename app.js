@@ -64,6 +64,35 @@ app.post('/restaurants', (req, res) => {
     .catch(error => console.log(error))
 })
 
+app.get('/restaurants/:id/edit', (req, res) => {
+  const { id } = req.params
+  Restaurant.findById(id)
+    .lean()
+    .then(data => res.render('edit', { restaurant: data }))
+    .catch(error => console.log(error))
+})
+
+app.post('/restaurants/:id/edit', (req, res) => {
+  const { id } = req.params
+  const { name, name_en, category, image, location, phone, google_map, rating, description } = req.body
+  
+  Restaurant.findById(id)
+  .then(data => {
+    data.name = name
+    data.name_en = name_en
+    data.category = category
+    data.image = image
+    data.location = location
+    data.phone = phone
+    data.google_map = google_map
+    data.rating = rating
+    data.description = description
+    return data.save()
+  })
+  .then(() => res.redirect(`/restaurants/${id}`))
+  .catch(error => console.log(error))
+})
+
 app.listen(port, () => {
   console.log(`Express server is listen now: http://localhost:${port}`);
 });

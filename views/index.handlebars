@@ -32,9 +32,9 @@
 <div class='container mt-5'>
   <div class='row'>
     <div class='col-md-10 col-12 mx-auto'>
-      <div class='row row-cols-sm-3'>
-
+      <div class='row row row-cols-1 row-cols-sm-3'>
         {{#each restaurantData}}
+        <div class="col">
           <a href='/restaurants/{{this._id}}' class='text-secondary'>
             <div class='card mb-3'>
               <img class='card-img-top' src={{this.image}} alt={{this.name}} />
@@ -52,8 +52,12 @@
                 </span>
 
               </div>
+              <div class="card-footer d-flex flex-row-reverse">
+                <a href="/restaurants/{{this._id}}/edit" class="text-decoration-none">Edit</a>
+              </div>
             </div>
           </a>
+        </div>
         {{/each}}
       </div>
     </div>
