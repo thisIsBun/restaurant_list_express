@@ -1,5 +1,5 @@
 const express = require('express');
-const engine = require('express-handlebars');
+const { engine } = require('express-handlebars');
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const routers = require('./routes')

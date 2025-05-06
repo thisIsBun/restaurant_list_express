@@ -56,16 +56,16 @@
                 <a href="/restaurants/{{this._id}}/edit" class="text-decoration-none">Edit</a>
 
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{this._id}}">
                   Delete
                 </button>
 
                 <!-- Modal -->
-                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal fade" id="deleteModal{{this._id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{this._id}}" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="deleteModalLabel">刪除餐廳</h1>
+                        <h1 class="modal-title fs-5" id="deleteModalLabel{{this._id}}">刪除餐廳</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
