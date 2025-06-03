@@ -1,9 +1,10 @@
-const express = require('express')
-const router = express.Router()
-const home = require('./modules/home')
-const restaurants = require('./modules/restaurants')
+import express from 'express';
+import home from './modules/home.js';
+import restaurants from './modules/restaurants.js';
 
-router.use('/', home)
-router.use('/restaurants', restaurants)
+const router = express.Router();
 
-module.exports = router
+router.use('/', home);
+router.use('/restaurants', restaurants);
+
+export default router;

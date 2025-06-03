@@ -1,19 +1,19 @@
-const express = require('express')
-const Restaurant = require('../../models/restaurant')
-const router = express.Router()
+import express from 'express';
+import Restaurant from '../../models/restaurant.js';
+const router = express.Router();
 
 router.get('/', (req, res) => {
   Restaurant.find()
     .lean()
     .then((data) => res.render('index', { restaurantData: data }))
-    .catch(error => console.log(error))
+    .catch((error) => console.log(error));
 });
 
 router.get('/search', (req, res) => {
   const { keyword } = req.query;
   Restaurant.find()
     .lean()
-    .then(restaurants => {
+    .then((restaurants) => {
       const results = restaurants.filter((data) => {
         return (
           data.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase()) ||
@@ -21,8 +21,7 @@ router.get('/search', (req, res) => {
         );
       });
       res.render('index', { restaurantData: results, keyword });
-    })
-
+    });
 });
 
-module.exports = router
+export default router;
