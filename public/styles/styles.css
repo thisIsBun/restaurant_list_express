@@ -21,8 +21,8 @@ header {
   filter: blur(3px);
 }
 
-.login-container {
-  margin-top: -60px !important;
+.form-container {
+  margin-top: -250px !important;
 }
 
 .search-bar .search-bar-outer {
