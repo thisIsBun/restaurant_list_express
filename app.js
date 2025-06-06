@@ -3,6 +3,7 @@ import { engine } from 'express-handlebars';
 import routers from './routes/index.js';
 import session from 'express-session';
 import './config/mongoose.js';
+import usePassport from './config/passport.js';
 import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
@@ -17,6 +18,7 @@ app.use(session({ secret: 'iphone', resave: false, saveUninitialized: true }));
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+usePassport(app);
 app.use(routers);
 
 app.listen(port, () => {

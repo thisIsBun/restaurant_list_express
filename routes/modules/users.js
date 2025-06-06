@@ -1,5 +1,6 @@
 import express from 'express';
 import User from '../../models/user.js';
+import passport from 'passport';
 const router = express.Router();
 
 router.get('/login', (req, res) => {
@@ -27,5 +28,13 @@ router.post('/register', (req, res) => {
     })
     .catch((error) => console.log(error));
 });
+
+router.post(
+  '/login',
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/users/login',
+  }),
+);
 
 export default router;
