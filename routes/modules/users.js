@@ -37,4 +37,9 @@ router.post(
   }),
 );
 
+router.get('/logout', (req, res) => {
+  req.logout(); // Passport method
+  res.redirect('/users/login');
+});
+
 export default router;
