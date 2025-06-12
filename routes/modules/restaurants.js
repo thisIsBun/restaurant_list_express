@@ -1,5 +1,5 @@
 import express from 'express';
-import Restaurant from '../../models/restaurant.js'
+import Restaurant from '../../models/restaurant.js';
 const router = express.Router();
 
 router.get('/new', (req, res) => {
@@ -8,21 +8,24 @@ router.get('/new', (req, res) => {
 
 router.get('/:id', (req, res) => {
   const { id } = req.params;
-  Restaurant.findById(id)
+  const userId = req.user._id;
+  Restaurant.findOne({ _id: id, userId })
     .lean()
     .then((data) => res.render('show', { restaurant: data }))
     .catch((error) => console.log(error));
 });
 
 router.post('/', (req, res) => {
-  Restaurant.create(req.body)
+  const userId = req.user._id;
+  Restaurant.create({ ...req.body, userId })
     .then(() => res.redirect('/'))
     .catch((error) => console.log(error));
 });
 
 router.get('/:id/edit', (req, res) => {
   const { id } = req.params;
-  Restaurant.findById(id)
+  const userId = req.user._id;
+  Restaurant.findOne({ _id: id, userId })
     .lean()
     .then((data) => res.render('edit', { restaurant: data }))
     .catch((error) => console.log(error));
@@ -30,10 +33,11 @@ router.get('/:id/edit', (req, res) => {
 
 router.put('/:id', (req, res) => {
   const { id } = req.params;
+  const userId = req.user._id;
   const { name, name_en, category, image, location, phone, google_map, rating, description } =
     req.body;
 
-  Restaurant.findById(id)
+  Restaurant.findOne({ _id: id, userId })
     .then((data) => {
       data.name = name;
       data.name_en = name_en;
@@ -44,6 +48,7 @@ router.put('/:id', (req, res) => {
       data.google_map = google_map;
       data.rating = rating;
       data.description = description;
+      data.userId = userId;
       return data.save();
     })
     .then(() => res.redirect(`/restaurants/${id}`))
@@ -52,7 +57,8 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
-  Restaurant.findById(id)
+  const userId = req.user._id;
+  Restaurant.findOne({ _id: id, userId })
     .then((data) => data.deleteOne())
     .then(() => res.redirect('/'))
     .catch((error) => console.log(error));

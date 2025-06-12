@@ -30,6 +30,14 @@ const restaurantSchema = new Schema({
   description: {
     type: String,
   },
+  userId: {
+    // mongoose populate function
+    // type and ref set together, specify userId is an ObjectId type, and points to User model ref
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    index: true,
+    required: true,
+  },
 });
 
 export default mongoose.model('Restaurant', restaurantSchema);
