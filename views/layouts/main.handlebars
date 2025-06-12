@@ -15,7 +15,7 @@
       integrity='sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq'
       crossorigin='anonymous'
     ></script>
-    <script src="https://kit.fontawesome.com/a32543fd5f.js" crossorigin="anonymous"></script>
+    <script src='https://kit.fontawesome.com/a32543fd5f.js' crossorigin='anonymous'></script>
   </head>
   <body>
     <header>
@@ -30,8 +30,14 @@
               class='d-inline-block align-top'
               alt='好。吃'
             />
-            我的餐廳清單
+            {{#if isAuthenticated}}{{user.name}}'s{{/if}}
+            餐廳清單
           </a>
+          {{#if isAuthenticated}}
+            <a href='/users/logout' class='btn btn-primary btn-block'>Logout</a>
+          {{else}}
+            <a href='/users/login' class='btn btn-primary btn-block'>Login</a>
+          {{/if}}
         </div>
       </nav>
 
