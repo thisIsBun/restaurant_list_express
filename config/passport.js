@@ -1,6 +1,7 @@
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import User from '../models/user.js';
+import bcrypt from 'bcryptjs';
 
 const usePassport = (app) => {
   app.use(passport.initialize());
@@ -13,11 +14,11 @@ const usePassport = (app) => {
         User.findOne({ email })
           .then((user) => {
             if (user) {
-              if (user.password !== password) {
+              if (bcrypt.compareSync(password, user.password)) {
+                return done(null, user);
+              } else {
                 req.flash('warning_msg', '密碼錯誤。');
                 return done(null, false);
-              } else {
-                return done(null, user);
               }
             }
             req.flash('warning_msg', '信箱尚未註冊。');

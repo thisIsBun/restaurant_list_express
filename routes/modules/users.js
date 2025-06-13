@@ -2,6 +2,7 @@ import express from 'express';
 import User from '../../models/user.js';
 import passport from 'passport';
 const router = express.Router();
+import bcrypt from 'bcryptjs';
 
 router.get('/login', (req, res) => {
   res.render('login');
@@ -32,7 +33,10 @@ router.post('/register', (req, res) => {
       errors.push('信箱已經註冊。');
       return res.render('register', { errors, name, email, password, confirmPassword });
     }
-    return User.create({ name, email, password })
+    return bcrypt
+      .genSalt(10)
+      .then((salt) => bcrypt.hashSync(password, salt))
+      .then((hash) => User.create({ name, email, password: hash }))
       .then(() => {
         res.render('login');
       })
