@@ -7,22 +7,27 @@ const usePassport = (app) => {
   app.use(passport.session());
 
   passport.use(
-    new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-      User.findOne({ email })
-        .then((user) => {
-          if (user) {
-            if (user.password !== password) {
-              return done(null, false, { message: 'user password incorrect' });
-            } else {
-              return done(null, user);
+    new LocalStrategy(
+      { usernameField: 'email', passReqToCallback: true },
+      (req, email, password, done) => {
+        User.findOne({ email })
+          .then((user) => {
+            if (user) {
+              if (user.password !== password) {
+                req.flash('warning_msg', '密碼錯誤。');
+                return done(null, false);
+              } else {
+                return done(null, user);
+              }
             }
-          }
-          return done(null, false, { message: 'email no register' });
-        })
-        .catch((error) => {
-          return done(error);
-        });
-    }),
+            req.flash('warning_msg', '信箱尚未註冊。');
+            return done(null, false);
+          })
+          .catch((error) => {
+            return done(error);
+          });
+      },
+    ),
   );
 
   passport.serializeUser((user, done) => {

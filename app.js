@@ -5,6 +5,7 @@ import session from 'express-session';
 import './config/mongoose.js';
 import usePassport from './config/passport.js';
 import { createRequire } from 'module';
+import flash from 'connect-flash';
 
 const require = createRequire(import.meta.url);
 const methodOverride = require('method-override');
@@ -19,11 +20,14 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 usePassport(app);
+app.use(flash());
 
 // setup variables by res.locals
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated();
   res.locals.user = req.user;
+  res.locals.warning_msg = req.flash('warning_msg');
+  res.locals.success_msg = req.flash('success_msg');
   next();
 });
 

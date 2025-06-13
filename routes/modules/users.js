@@ -13,20 +13,31 @@ router.get('/register', (req, res) => {
 
 router.post('/register', (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
+  const errors = [];
 
-  User.findOne({ email })
-    .then((user) => {
-      if (user) {
-        console.log('user existed already');
-        res.render('register', { name, email, password, confirmPassword });
-      } else {
-        return User.create({ name, email, password });
-      }
-    })
-    .then(() => {
-      res.render('login');
-    })
-    .catch((error) => console.log(error));
+  if (!name || !email || !password || !confirmPassword) {
+    errors.push('欄位皆為必填。');
+  }
+
+  if (password !== confirmPassword) {
+    errors.push('密碼與確認密碼不一致。');
+  }
+
+  if (errors.length > 0) {
+    return res.render('register', { errors, name, email, password, confirmPassword });
+  }
+
+  User.findOne({ email }).then((user) => {
+    if (user) {
+      errors.push('信箱已經註冊。');
+      return res.render('register', { errors, name, email, password, confirmPassword });
+    }
+    return User.create({ name, email, password })
+      .then(() => {
+        res.render('login');
+      })
+      .catch((error) => console.log(error));
+  });
 });
 
 router.post(
@@ -39,6 +50,7 @@ router.post(
 
 router.get('/logout', (req, res) => {
   req.logout(); // Passport method
+  req.flash('success_msg', '登出成功。');
   res.redirect('/users/login');
 });
 
