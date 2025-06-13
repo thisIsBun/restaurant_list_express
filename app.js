@@ -6,16 +6,17 @@ import './config/mongoose.js';
 import usePassport from './config/passport.js';
 import { createRequire } from 'module';
 import flash from 'connect-flash';
+import 'dotenv/config';
 
 const require = createRequire(import.meta.url);
 const methodOverride = require('method-override');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 
 app.engine('handlebars', engine({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
-app.use(session({ secret: 'iphone', resave: false, saveUninitialized: true }));
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
